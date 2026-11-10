@@ -1,5 +1,6 @@
 CC ?= 
 CFLAGS ?=
+LDFLAGS ?=
 TARGET ?=
 
 ENTRY ?=
@@ -8,20 +9,11 @@ OUTPUT = simple-games
 EXTENSION ?=
 
 BUILD = $(CC) -std=c99 $(CFLAGS) -target $(TARGET) -Iinclude
-EO = build/$(TARGET)/$(ENTRY).o
-OO = build/$(TARGET)/$(OUTPUT).o
+SOURCES = entry/$(ENTRY).c $(wildcard src/*.c)
 
-build/$(TARGET)/$(OUTPUT)$(EXTENSION): $(EO) $(OO)
+build/$(TARGET)/$(OUTPUT)$(EXTENSION): $(SOURCES)
 	mkdir -p build/$(TARGET)
-	$(BUILD) $^ -o $@
-
-$(EO): entry/$(ENTRY).c
-	mkdir -p build/$(TARGET)
-	$(BUILD) -c $^ -o $@
-
-$(OO): src/*.c
-	mkdir -p build/$(TARGET)
-	$(BUILD) -c $^ -o $@
+	$(BUILD) $(LDFLAGS) $^ -o $@
 
 .PHONY: clean
 clean:
